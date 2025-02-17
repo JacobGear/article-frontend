@@ -7,8 +7,17 @@ function Article() {
   const [article, setArticle] = useState(null);
 
   useEffect(() => {
-    const foundArticle = fetchArticles().find((a) => a.id === Number(id));
-    setArticle(foundArticle);
+    const getArticle = async () => {
+      const articles = await fetchArticles(); // Ensure we await the data
+      if (Array.isArray(articles)) {
+        const foundArticle = articles.find((a) => a.id === Number(id));
+        setArticle(foundArticle);
+      } else {
+        console.error("fetchArticles did not return an array:", articles);
+      }
+    };
+
+    getArticle();
   }, [id]);
 
   if (!article) return <h1 className="text-danger">Article not found</h1>;
